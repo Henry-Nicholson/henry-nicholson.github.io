@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thermal Adaptation of Sub-Arctic Soil Fungi · Henry Nicholson</title>
+  <meta name="description" content="MSc thesis, Lund University (2026): did five years of field warming at Abisko change the thermal biology of sub-arctic soil fungi? 141 isolates, 1,789 plates, and a clear answer.">
+  <meta property="og:title" content="Do sub-arctic soil fungal communities adapt in response to chronic warming?">
+  <meta property="og:description" content="MSc thesis by Henry Nicholson, Lund University, 2026.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="assets/thesis/isolate-library.jpg">
+  <meta name="theme-color" content="#f6f4ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111714" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232f6b4f'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='27' font-weight='600' text-anchor='middle' fill='%23fff'%3EHN%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-work" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+    <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="wordmark" href="index.html">Henry Nicholson</a>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <a href="index.html#about">About</a>
+        <a href="index.html#research" aria-current="page">Research</a>
+        <a href="index.html#skills">Skills</a>
+        <a href="index.html#cv">CV</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-btn" type="button" aria-label="Switch to dark theme">
+          <svg class="icon icon-moon"><use href="#i-moon"/></svg>
+          <svg class="icon icon-sun"><use href="#i-sun"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
+          <svg class="icon icon-open"><use href="#i-menu"/></svg>
+          <svg class="icon icon-close"><use href="#i-close"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="project-hero" aria-labelledby="project-title">
+      <img src="assets/thesis/isolate-library.jpg" alt="" width="1400" height="1050">
+      <div class="container">
+        <a class="crumb" href="index.html#research"><svg class="icon"><use href="#i-back"/></svg>All research</a>
+        <p class="eyebrow">MSc thesis · 2026</p>
+        <h1 id="project-title">Do sub-arctic soil fungal communities adapt in response to chronic warming?</h1>
+        <p class="lead">An assessment of thermal adaptation in soil fungi after five years of experimental warming near Abisko, at both the community and the isolate level.</p>
+        <ul class="project-meta">
+          <li><svg class="icon"><use href="#i-award"/></svg>Pass with distinction</li>
+          <li><svg class="icon"><use href="#i-work"/></svg>Functional Ecology, Department of Biology, Lund University</li>
+          <li><svg class="icon"><use href="#i-pin"/></svg>Fieldwork at Abisko, 68°N</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="container">
+      <dl class="stats">
+        <div class="stat"><dt class="sr-only">Realised warming</dt><dd><b>+1.32&nbsp;°C</b><span>realised warming over five years</span></dd></div>
+        <div class="stat"><dt class="sr-only">Isolates</dt><dd><b>141</b><span>fungal isolates in culture</span></dd></div>
+        <div class="stat"><dt class="sr-only">Temperatures</dt><dd><b>9</b><span>assay temperatures, 0.9 to 40&nbsp;°C</span></dd></div>
+        <div class="stat"><dt class="sr-only">Plates</dt><dd><b>1,789</b><span>agar plates scored</span></dd></div>
+        <div class="stat"><dt class="sr-only">Readings</dt><dd><b>18,766</b><span>colony-edge readings</span></dd></div>
+        <div class="stat"><dt class="sr-only">Model fits</dt><dd><b>140/141</b><span>curve fits converged, median R² 0.99</span></dd></div>
+      </dl>
+    </div>
+
+    <!-- ============ QUESTION ============ -->
+    <section class="section section-flush" aria-labelledby="q-title">
+      <div class="container">
+        <div class="prose reveal">
+          <span class="section-label">Background</span>
+          <h2 id="q-title">Background and aims</h2>
+          <p>The Arctic is warming nearly four times faster than the global mean, and its soils store large quantities of organic carbon. Fungi are major decomposers of this carbon, so whether their physiology adjusts to sustained warming is important for predicting soil carbon loss.</p>
+          <p>Community-level assays of bacteria have shown upward shifts in temperature optima under warming, but it remains unclear whether this reflects adaptation of the organisms or turnover in community composition, and the equivalent test had not been made for fungi at the level of individual isolates. The study addressed four questions at two levels of organisation:</p>
+        </div>
+        <ol class="questions reveal">
+          <li>Does chronic warming change fungal diversity, composition or abundance?</li>
+          <li>Do the thermal traits of the whole soil community shift?</li>
+          <li>Do the thermal traits of individual cultured isolates shift?</li>
+          <li>Are there trade-offs among thermal traits?</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ EXPERIMENT ============ -->
+    <section class="section" aria-labelledby="site-title">
+      <div class="container split">
+        <div class="prose reveal">
+          <span class="section-label">Study site</span>
+          <h2 id="site-title">Experimental warming at Abisko</h2>
+          <p>In a mountain-birch forest near Abisko, northern Sweden, eight 1&nbsp;m² plots of forest floor have been part of a warming experiment since 2020. Half of the plots are heated year-round with infrared heaters.</p>
+          <p>Soil temperature loggers recorded a realised warming of <strong>+1.32&nbsp;°C</strong>, reaching approximately +2&nbsp;°C in summer, comparable to the warming projected for these soils in the coming decades. I took part in repeated sampling campaigns at the site, collecting topsoil from four points per plot.</p>
+        </div>
+        <figure class="photo reveal">
+          <img src="assets/photos/warming-experiment.jpg" alt="Two metal frames holding infrared heaters over small plots of birch forest floor, with mountains in the background" width="1600" height="1200" loading="lazy">
+          <figcaption>The warming experiment near Abisko. Each frame holds an infrared heater above 1&nbsp;m² of birch forest floor.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ APPROACHES ============ -->
+    <section class="section" aria-labelledby="approach-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="section-label">Methods</span>
+            <h2 id="approach-title">Three independent measurements</h2>
+          </div>
+        </div>
+        <div class="approaches">
+          <article class="approach reveal">
+            <img src="assets/thesis/soil-sample.jpg" alt="A sample tube of sieved soil held up in the field" width="718" height="1000" loading="lazy">
+            <div>
+              <span class="step">01 · Community composition</span>
+              <h3>Amplicon sequencing and qPCR</h3>
+              <p>ITS2 and 16S amplicon sequencing characterised fungal and bacterial community composition; 18S qPCR and ergosterol quantified fungal biomass.</p>
+            </div>
+          </article>
+          <article class="approach reveal">
+            <img src="assets/thesis/isotope-vials.jpg" alt="A lab bench racked with several hundred scintillation and HPLC vials" width="1400" height="865" loading="lazy">
+            <div>
+              <span class="step">02 · Community growth</span>
+              <h3>Whole-soil temperature response</h3>
+              <p>Growth of the resident fungal community from 0 to 45&nbsp;°C, measured as ¹⁴C-acetate incorporation into ergosterol and quantified by HPLC and liquid scintillation counting.</p>
+            </div>
+          </article>
+          <article class="approach reveal">
+            <img src="assets/photos/isolation.jpg" alt="A soil dilution plate covered in small colonies above a fresh labelled plate" width="975" height="1300" loading="lazy">
+            <div>
+              <span class="step">03 · Isolate physiology</span>
+              <h3>141 isolates in pure culture</h3>
+              <p>Fungi were isolated by dilution plating from warmed and control soil and grown at nine temperatures, so that the minimum, optimum and maximum growth temperatures of each strain could be measured directly.</p>
+            </div>
+          </article>
+        </div>
+
+        <figure class="photo wide-photo reveal">
+          <img src="assets/thesis/temperature-series.jpg" alt="Eleven agar plates of isolate 140, labelled A and B, arranged from 0 to 30 degrees, with colonies of different sizes" width="1760" height="582" loading="lazy">
+          <figcaption>Isolate 140 on replicate plates across the temperature series, 0 to 30&nbsp;°C. Colony margins were marked and measured daily to obtain a growth rate at each temperature.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ MODEL ============ -->
+    <section class="section" aria-labelledby="model-title">
+      <div class="container split reverse">
+        <div class="prose reveal">
+          <span class="section-label">Analysis</span>
+          <h2 id="model-title">Thermal performance modelling</h2>
+          <p>For each isolate I fitted the cardinal temperature model with inflection (CTMI). It yields the minimum, optimum and maximum growth temperatures and the peak growth rate: a complete thermal profile for each isolate rather than a community average.</p>
+          <p>I built the analysis pipeline in R: mixed models matched to the blocked design, exact restricted-permutation PERMANOVA, ordination and nonlinear curve fitting with residual diagnostics. Every fit was screened for whether its thermal limits were really identified by the data, or only pinned to the outermost temperature measured.</p>
+        </div>
+        <figure class="figure reveal">
+          <div class="plot"><img src="assets/thesis/fig-ctmi-model.png" alt="Diagram of the cardinal temperature model: growth rate rises from Tmin to a peak at Topt, then falls steeply to Tmax, with the thermal niche and 80 percent breadth marked" width="1586" height="672" loading="lazy"></div>
+          <figcaption>The cardinal temperature model with inflection (CTMI) and the traits taken from it: T<sub>min</sub>, T<sub>opt</sub>, T<sub>max</sub>, peak rate and breadth.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ LAB GALLERY ============ -->
+    <section class="section" aria-labelledby="lab-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="section-label">Laboratory work</span>
+            <h2 id="lab-title">Isolation, culture and measurement</h2>
+          </div>
+        </div>
+        <div class="mosaic">
+          <figure class="tile tall reveal">
+            <img src="assets/photos/plate-hell.jpg" alt="Standing in a lab surrounded by towers of stacked agar plates" width="975" height="1300" loading="lazy">
+            <figcaption>Growth assay in progress: isolate plates stacked for daily scoring.</figcaption>
+          </figure>
+          <figure class="tile tall reveal">
+            <img src="assets/photos/fungi-collection.jpg" alt="Dozens of labelled culture plates laid out in a grid, each with a different fungus" width="975" height="1300" loading="lazy">
+            <figcaption>Part of the 141-isolate culture collection.</figcaption>
+          </figure>
+          <figure class="tile reveal">
+            <img src="assets/thesis/ringed-colony.jpg" alt="A fungal colony growing in concentric rings on agar, held in a gloved hand" width="864" height="748" loading="lazy">
+            <figcaption>Concentric growth zones in a fungal colony.</figcaption>
+          </figure>
+          <figure class="tile reveal">
+            <img src="assets/thesis/plate-at-microscope.jpg" alt="A gloved hand holding up an isolate plate at the microscope bench" width="750" height="1000" loading="lazy">
+            <figcaption>Inspection of an isolate at the microscope bench.</figcaption>
+          </figure>
+          <figure class="tile wide reveal">
+            <img src="assets/thesis/plate-bench.jpg" alt="A laboratory bench stacked with several hundred labelled agar plates" width="1400" height="886" loading="lazy">
+            <figcaption>Isolate plates during daily growth scoring.</figcaption>
+          </figure>
+          <figure class="tile reveal">
+            <img src="assets/photos/thermosequence.jpg" alt="A column of plates of one isolate grown at a series of temperatures" width="975" height="1300" loading="lazy">
+            <figcaption>One isolate across the temperature series.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RESULTS ============ -->
+    <section class="section" aria-labelledby="result-title">
+      <div class="container split">
+        <div class="prose reveal">
+          <span class="section-label">Results</span>
+          <h2 id="result-title">No detectable thermal adaptation</h2>
+          <p>Warmed and control soils were indistinguishable: fungal community composition, fungal biomass and the community temperature response did not differ. Isolates from warmed plots showed the same thermal range, the same optimum temperature and the same survival after exposure to 35&nbsp;°C.</p>
+          <p>The optimum temperature shifted by <strong>+0.26&nbsp;°C</strong>, consistent with the shift expected from the realised warming (+0.25 to +0.38&nbsp;°C) and small relative to the 3.8&nbsp;°C variation among isolates. Growth rates of warmed isolates were, if anything, slightly lower, contrary to the expectation under heat adaptation. Thermal traits were positively correlated rather than showing trade-offs.</p>
+        </div>
+        <figure class="figure reveal">
+          <div class="plot"><img src="assets/thesis/fig-growth-by-temperature.png" alt="Line chart of mean isolate growth rate against temperature for control and warming: both curves rise to a peak near 20 degrees and fall by 30 degrees, overlapping throughout" width="954" height="578" loading="lazy"></div>
+          <figcaption>Mean isolate growth rate (± SE) across assay temperatures. Isolates from warmed plots closely follow the controls; the slightly lower rates are not significant.</figcaption>
+        </figure>
+      </div>
+      <div class="container">
+        <div class="callout reveal">
+          <h3>Variation among isolates</h3>
+          <p>Independent of the warming treatment, isolates that recovered after high-temperature exposure had higher optimum and maximum growth temperatures and approximately half the thermal trait width of those that did not. Substantial thermal variation therefore exists among isolates and is associated with acute heat survival.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONCLUSION ============ -->
+    <section class="section" aria-labelledby="concl-title">
+      <div class="container">
+        <span class="section-label reveal">Conclusion</span>
+        <h2 id="concl-title" class="sr-only">Conclusion</h2>
+        <blockquote class="pullquote reveal">Five years of chronic +1.32&nbsp;°C warming produced no detectable thermal adaptation. On this evidence, sub-arctic soil fungi are resistant to modest warming rather than adjusting to it.</blockquote>
+        <p class="pullquote-src reveal">The three measurement approaches gave consistent results. Particular attention was given to establishing the detection limits of the design, so that the negative result can be interpreted with confidence.</p>
+      </div>
+    </section>
+
+    <!-- ============ ROLE + DEFENCE ============ -->
+    <section class="section" aria-labelledby="role-title">
+      <div class="container split">
+        <div class="reveal">
+          <span class="section-label">Role</span>
+          <h2 id="role-title">Contribution to the project</h2>
+          <ul class="role-list">
+            <li>Participated in repeated field campaigns at the Abisko warming experiment, including microclimate logger deployment</li>
+            <li>Isolated the 141 strains and established and maintained the culture collection</li>
+            <li>Conducted the radial growth assay, scoring all plates</li>
+            <li>Performed radiotracer incubations, ergosterol HPLC and liquid scintillation counting</li>
+            <li>Carried out DNA extraction, ITS2/16S amplicon sequencing and 18S qPCR</li>
+            <li>Developed the full statistical analysis in R, including data-validation scripts</li>
+          </ul>
+          <p class="supervisors">Supervised by François Maillard and Johannes Rousk, Functional Ecology, Lund University. MSc degree project, 60 credits.</p>
+        </div>
+        <div class="photo-stack reveal">
+          <figure class="photo">
+            <img src="assets/photos/field-abisko.jpg" alt="Standing on open tundra near Abisko beside a sampling pole, with a lake and snow-capped mountains behind" width="1600" height="1200" loading="lazy">
+            <figcaption>Fieldwork near Abisko.</figcaption>
+          </figure>
+          <figure class="photo">
+            <img src="assets/thesis/defence.jpg" alt="Henry Nicholson standing beside a screen showing the title slide, Thermal Adaptation of Sub-Arctic Soil Fungi" width="1600" height="1103" loading="lazy">
+            <figcaption>Thesis presentation, Department of Biology, Lund University.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NEXT ============ -->
+    <section class="section" aria-labelledby="next-title">
+      <div class="container">
+        <div class="next-card reveal">
+          <div>
+            <span class="section-label">Ongoing work</span>
+            <h3 id="next-title">Follow-up manuscript</h3>
+            <p>The isolate collection is now being characterised across water potential and carbon quality in addition to temperature, for a first-author manuscript in preparation. The full thesis is available on request.</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary" href="index.html#research">All research <svg class="icon"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-secondary" href="mailto:henry.d.nicholson@gmail.com?subject=MSc%20thesis">Request the thesis <svg class="icon"><use href="#i-mail"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span data-year>2026</span> Henry Nicholson</p>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/ferns.js" defer></script>
+</body>
+</html>

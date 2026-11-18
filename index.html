@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Henry Nicholson · Fungal Ecologist &amp; Data Analyst</title>
+  <meta name="description" content="Henry Nicholson is a fungal ecologist and data analyst at Lund University, studying how soil fungi respond to temperature and drought, and analysing the data in R.">
+  <meta property="og:title" content="Henry Nicholson · Fungal Ecologist &amp; Data Analyst">
+  <meta property="og:description" content="Soil fungi at collection scale: isolation, growth phenotyping across temperature and water potential, and the R pipelines behind the results.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/portrait.jpg">
+  <meta name="theme-color" content="#f6f4ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111714" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232f6b4f'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='27' font-weight='600' text-anchor='middle' fill='%23fff'%3EHN%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Apply a saved light/dark choice before the page paints.
+    try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Henry Nicholson",
+    "jobTitle": "Research Assistant",
+    "description": "Fungal ecologist and data analyst working on the physiology and ecology of soil fungi.",
+    "worksFor": { "@type": "CollegeOrUniversity", "name": "Lund University" },
+    "alumniOf": [
+      { "@type": "CollegeOrUniversity", "name": "Lund University" },
+      { "@type": "CollegeOrUniversity", "name": "Swedish University of Agricultural Sciences" }
+    ],
+    "address": { "@type": "PostalAddress", "addressLocality": "Malmö", "addressCountry": "SE" },
+    "email": "mailto:henry.d.nicholson@gmail.com",
+    "sameAs": ["https://orcid.org/0009-0001-5105-5568"],
+    "knowsAbout": ["Fungal ecology", "Soil fungi", "Thermal performance curves", "Amplicon sequencing", "qPCR", "Statistical analysis in R", "Spatial analysis"]
+  }
+  </script>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-work" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14m0 0-6-6m6 6 6-6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+    <symbol id="i-id" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 8v8M13 8h1.5a4 4 0 0 1 0 8H13z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3M7.4 15h9.2"/></symbol>
+    <symbol id="i-beaker" viewBox="0 0 24 24"><path d="M5 3h14M7 3v14a4 4 0 0 0 4 4h2a4 4 0 0 0 4-4V3M7 11h10"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 20h18M6 16v-4M11 16V7M16 16v-6M21 16V4"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="wordmark" href="#top">Henry Nicholson</a>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#lab">Lab</a>
+        <a href="#skills">Skills</a>
+        <a href="#cv">CV</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-btn" type="button" aria-label="Switch to dark theme">
+          <svg class="icon icon-moon"><use href="#i-moon"/></svg>
+          <svg class="icon icon-sun"><use href="#i-sun"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
+          <svg class="icon icon-open"><use href="#i-menu"/></svg>
+          <svg class="icon icon-close"><use href="#i-close"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <canvas class="hyphae" aria-hidden="true"></canvas>
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <p class="eyebrow">Fungal ecologist &amp; data analyst</p>
+          <h1 id="hero-title">Henry Nicholson</h1>
+          <p class="lead">I study the physiology and ecology of soil fungi, combining culture-based phenotyping at collection scale with molecular methods and statistical analysis in R.</p>
+          <ul class="hero-meta">
+            <li><svg class="icon"><use href="#i-work"/></svg>Research Assistant · Lund University</li>
+            <li><svg class="icon"><use href="#i-pin"/></svg>Malmö, Sweden</li>
+          </ul>
+          <div class="actions">
+            <a class="btn btn-primary" href="#research">View research <svg class="icon"><use href="#i-down"/></svg></a>
+            <a class="btn btn-secondary" href="#contact">Contact <svg class="icon"><use href="#i-mail"/></svg></a>
+          </div>
+        </div>
+
+        <!-- Portrait: replace assets/portrait.jpg with any 4:5 photo. -->
+        <figure class="portrait">
+          <span class="initials" aria-hidden="true">HN</span>
+          <img src="assets/portrait.jpg" alt="Portrait of Henry Nicholson" width="720" height="900" onload="this.parentNode.classList.add('has-photo')" onerror="this.remove()">
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="section-label">01 · About</span>
+            <h2 id="about-title">Background</h2>
+          </div>
+        </div>
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <p>I hold an MSc in Biology from Lund University (2026), where my degree project was graded Pass with distinction, and a BSc in Biology from the Swedish University of Agricultural Sciences, SLU Alnarp (2024), including 105 credits of forest science. As an undergraduate I worked as a laboratory assistant on a fungal pathology study of pathogens introduced to Sweden on imported tree seeds.</p>
+            <p>My MSc project tested whether soil fungi from a long-term field warming experiment near Abisko, sub-arctic Sweden, had adapted to warmer conditions. I isolated 141 fungal strains, quantified their growth at nine temperatures and developed the complete statistical analysis in R. No thermal adaptation was detected. Considerable care went into establishing what the design could and could not detect, so that the negative result can be interpreted with confidence.</p>
+            <p>I currently work as a research assistant in the same group at Lund University, where I lead a water-potential phenotyping experiment on the isolate collection and supervise a bachelor's degree student.</p>
+          </div>
+          <div class="about-side reveal">
+            <figure class="photo">
+              <img src="assets/photos/field-abisko.jpg" alt="Standing on open tundra near Abisko beside a sampling pole, with a lake and snow-capped mountains behind" width="1600" height="1200" loading="lazy">
+              <figcaption>Fieldwork near Abisko, sub-arctic Sweden.</figcaption>
+            </figure>
+            <figure class="photo">
+              <a href="thesis.html"><img src="assets/thesis/defence.jpg" alt="Henry Nicholson standing beside a screen showing the title slide, Thermal Adaptation of Sub-Arctic Soil Fungi" width="1600" height="1103" loading="lazy"></a>
+              <figcaption>MSc thesis presentation, Lund University. <a href="thesis.html">Project summary</a>.</figcaption>
+            </figure>
+            <dl class="facts">
+              <div><dt>Education</dt><dd>MSc Biology, Lund University (2026)<br>BSc Biology, SLU Alnarp (2024)</dd></div>
+              <div><dt>Languages</dt><dd>English and Swedish</dd></div>
+              <div><dt>Open to</dt><dd>PhD positions and research roles in fungal biology</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RESEARCH ============ -->
+    <section class="section" id="research" aria-labelledby="research-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="section-label">02 · Research</span>
+            <h2 id="research-title">Research projects</h2>
+            <p class="section-intro">How soil fungi respond to environmental change, measured at the level of individual isolates and analysed with methods matched to the experimental design.</p>
+          </div>
+        </div>
+
+        <div class="cards">
+          <article class="card reveal">
+            <div class="card-visual" aria-hidden="true">
+              <svg class="viz viz-assay" data-anim="assay" viewBox="0 0 300 140" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <div class="tags"><span class="tag">Manuscript in preparation</span><span class="tag">First author</span><span class="tag tag-muted">2026 –</span></div>
+            <h3>Fungal isolate traits across temperature, water potential and carbon quality</h3>
+            <p>Characterising each of the 141 isolates as a fitted response along three environmental axes rather than as a community average. I designed and run the water-potential (drought) axis, a PEG 8000 osmotic assay on solid medium in which the realised water potential is determined gravimetrically. In collaboration with F. Maillard and J. Rousk, Lund University.</p>
+            <div class="card-foot">Osmotic assays · Growth phenotyping · R</div>
+          </article>
+
+          <article class="card reveal">
+            <a class="card-visual" href="thesis.html" tabindex="-1" aria-hidden="true">
+              <svg class="viz viz-fit" data-anim="fit" viewBox="0 0 300 140" preserveAspectRatio="xMidYMid meet"></svg>
+            </a>
+            <div class="tags"><span class="tag">MSc thesis</span><span class="tag">Pass with distinction</span><span class="tag tag-muted">2026</span></div>
+            <h3>Do sub-arctic soil fungal communities adapt in response to chronic warming?</h3>
+            <p>Fungi were isolated from a long-term warming experiment in mountain-birch forest near Abisko and grown at nine temperatures from 0.9 to 40&nbsp;°C, with a cardinal temperature model fitted to each isolate (140 of 141 converged, median R² = 0.99). Community responses were assessed with ¹⁴C-acetate and ³H-leucine incorporation, ITS2/16S amplicon sequencing and qPCR. The shift in optimum temperature (+0.26&nbsp;°C) matched that expected from the realised warming, indicating no detectable adaptation.</p>
+            <a class="card-link" href="thesis.html">Project summary <svg class="icon"><use href="#i-arrow"/></svg></a>
+            <div class="card-foot">18,766 colony readings · 1,789 plates · Lund University</div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-visual" aria-hidden="true">
+              <svg class="viz viz-lichen" data-anim="lichen" viewBox="0 0 300 140" preserveAspectRatio="xMidYMid slice"></svg>
+            </div>
+            <div class="tags"><span class="tag">BSc thesis</span><span class="tag tag-muted">2024</span></div>
+            <h3>Epiphytic lichens in fast-growing broadleaf stands in middle and southern Sweden</h3>
+            <p>An independent data-analysis project at the Southern Swedish Forest Research Centre, assessing epiphytic lichens in 48 fast-growing broadleaf stands as an indicator of old-growth conservation value.</p>
+            <div class="card-foot">Field data · R · SLU Alnarp</div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-visual" aria-hidden="true">
+              <svg class="viz viz-hex" data-anim="hex" viewBox="0 0 300 140" preserveAspectRatio="xMidYMid slice"></svg>
+            </div>
+            <div class="tags"><span class="tag">Course project</span><span class="tag tag-muted">2026</span></div>
+            <h3>Spatial analysis of Swedish wetlands</h3>
+            <p>Coursework in environmental data analysis: aggregation of national wetland-inventory data, drainage ditches and cultural heritage sites to an H3 hexagonal grid using Python and GeoPandas, and satellite NDVI time series in Google Earth Engine. Builds on 15 credits of GIS and remote sensing, including random-forest classification and drone LiDAR analysis of palsa change.</p>
+            <div class="card-foot">Python · GeoPandas · Earth Engine · QGIS</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FIELD & LAB ============ -->
+    <section class="section" id="lab" aria-labelledby="lab-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="section-label">03 · Field &amp; laboratory</span>
+            <h2 id="lab-title">Field and laboratory work</h2>
+            <p class="section-intro">Selected images from the MSc project: isolation, culture maintenance and radial growth measurement.</p>
+          </div>
+          <a class="btn btn-secondary" href="thesis.html">MSc project summary <svg class="icon"><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="mosaic">
+          <figure class="tile tall reveal">
+            <img src="assets/photos/plate-hell.jpg" alt="Standing in a lab surrounded by towers of stacked agar plates" width="975" height="1300" loading="lazy">
+            <figcaption>Growth assay in progress: isolate plates stacked for daily scoring.</figcaption>
+          </figure>
+          <figure class="tile tall reveal">
+            <img src="assets/photos/isolation.jpg" alt="A soil dilution plate covered in small colonies above a fresh labelled plate" width="975" height="1300" loading="lazy">
+            <figcaption>Isolation from a soil dilution plate onto fresh medium.</figcaption>
+          </figure>
+          <figure class="tile reveal">
+            <img src="assets/photos/growth-marks.jpg" alt="An orange fungal colony with coloured marks along four axes at its edge" width="684" height="690" loading="lazy">
+            <figcaption>Radial growth measurement: colony margins marked daily along four axes.</figcaption>
+          </figure>
+          <figure class="tile reveal">
+            <img src="assets/photos/plugs-mycelium.jpg" alt="White fluffy mycelium spreading from agar plugs on a plate" width="975" height="1300" loading="lazy">
+            <figcaption>Mycelial growth from agar plugs.</figcaption>
+          </figure>
+          <figure class="tile wide reveal">
+            <img src="assets/photos/lag-then-growth.jpg" alt="A plate labelled isolate 60 at 30 degrees, with dense coloured growth marks around the colony" width="1500" height="753" loading="lazy">
+            <figcaption>Isolate 60 at 30&nbsp;°C: daily margin marks record an initial lag followed by growth.</figcaption>
+          </figure>
+          <figure class="tile reveal">
+            <img src="assets/thesis/isolate-library.jpg" alt="Dozens of culture plates with coloured rims laid out in a grid" width="1400" height="1050" loading="lazy">
+            <figcaption>The isolate culture collection.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section class="section" id="skills" aria-labelledby="skills-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="section-label">04 · Skills</span>
+            <h2 id="skills-title">Methods and technical skills</h2>
+          </div>
+        </div>
+        <div class="skills">
+          <div class="skill-group reveal">
+            <h3><svg class="icon"><use href="#i-flask"/></svg>Lab &amp; field</h3>
+            <ul class="chips">
+              <li>Fungal isolation (dilution plating)</li>
+              <li>Culture-library maintenance</li>
+              <li>Media preparation</li>
+              <li>Growth phenotyping across temperature &amp; water potential</li>
+              <li>PEG 8000 osmotic assays</li>
+              <li>DNA extraction from soil &amp; pure cultures</li>
+              <li>ITS2 &amp; 16S amplicon sequencing</li>
+              <li>18S qPCR</li>
+              <li>Sub-arctic fieldwork &amp; microclimate loggers</li>
+              <li>Soil pH, moisture &amp; loss on ignition</li>
+            </ul>
+          </div>
+          <div class="skill-group reveal">
+            <h3><svg class="icon"><use href="#i-beaker"/></svg>Analytical methods</h3>
+            <ul class="chips">
+              <li>Reverse-phase HPLC (ergosterol)</li>
+              <li>Liquid scintillation counting</li>
+              <li>¹⁴C-acetate &amp; ³H-leucine radiotracer assays</li>
+              <li>Headspace CO₂ by gas chromatography</li>
+              <li>Gradient &amp; block experimental design</li>
+            </ul>
+          </div>
+          <div class="skill-group reveal">
+            <h3><svg class="icon"><use href="#i-chart"/></svg>Data &amp; analysis</h3>
+            <ul class="chips">
+              <li>R / RStudio</li>
+              <li>tidyverse</li>
+              <li>Mixed models (lme4, glmmTMB)</li>
+              <li>PERMANOVA &amp; ordination (vegan)</li>
+              <li>Nonlinear curve fitting</li>
+              <li>Random forests</li>
+              <li>Data-validation pipelines</li>
+              <li>Python (pandas, GeoPandas)</li>
+              <li>Google Earth Engine (geemap)</li>
+              <li>Satellite imagery &amp; NDVI</li>
+              <li>QGIS &amp; ArcGIS Pro</li>
+              <li>ImageJ</li>
+            </ul>
+          </div>
+          <div class="skill-group reveal">
+            <h3><svg class="icon"><use href="#i-chat"/></svg>Communication &amp; leadership</h3>
+            <ul class="chips">
+              <li>Supervising a BSc student</li>
+              <li>Writing standing lab protocols</li>
+              <li>Reporting across two research groups</li>
+              <li>English &amp; Swedish</li>
+              <li>President, Environmental Committee (Alnarp Student Union)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CV ============ -->
+    <section class="section" id="cv" aria-labelledby="cv-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="section-label">05 · CV</span>
+            <h2 id="cv-title">Education &amp; experience</h2>
+          </div>
+          <!-- To offer a CV download, save a web version (no phone number, home address or referee emails)
+               as assets/cv.pdf and uncomment this button:
+          <a class="btn btn-secondary" href="assets/cv.pdf" download>Full CV (PDF) <svg class="icon"><use href="#i-download"/></svg></a>
+          -->
+        </div>
+
+        <div class="cv-grid">
+          <div class="cv-col reveal">
+            <h3>Experience</h3>
+            <ol class="timeline">
+              <li>
+                <span class="when">Sep 2026 – present</span>
+                <p class="what">Research Assistant</p>
+                <p class="where">Department of Biology, Lund University. Leading the water-potential phenotyping experiment from protocol development to data analysis, and supervising a bachelor's degree student.</p>
+              </li>
+              <li>
+                <span class="when">Mar 2022 – Sep 2022</span>
+                <p class="what">Laboratory Assistant</p>
+                <p class="where">Southern Swedish Forest Research Centre, SLU Alnarp. Pure-culture microbiology on a study of fungal pathogens introduced on imported tree seeds: subculturing, DNA isolation and quality control of genotype data.</p>
+              </li>
+            </ol>
+          </div>
+          <div class="cv-col reveal">
+            <h3>Education</h3>
+            <ol class="timeline">
+              <li>
+                <span class="when">2024 – 2026</span>
+                <p class="what">MSc in Biology, 120 credits</p>
+                <p class="where">Lund University. Degree project graded Pass with distinction; four of five courses passed with distinction, including Processing and Analysis of Biological Data and Modelling Biological Systems.</p>
+              </li>
+              <li>
+                <span class="when">2021 – 2024</span>
+                <p class="what">BSc in Biology, 180 credits</p>
+                <p class="where">SLU Alnarp, with courses at the universities of Gothenburg, Umeå and Skövde. 105 credits of forest science, together with fungal laboratory methods, microbiology, bioinformatics, GIS and R. President of the Alnarp Student Union Environmental Committee.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="coursework reveal">
+          <h3>Selected coursework</h3>
+          <div class="course-grid">
+            <div>
+              <p class="course-head">MSc in Biology · Lund University</p>
+              <ul class="course-list">
+                <li><span class="cname">Master's Degree Project</span><span class="cr">60 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Population and Community Ecology</span><span class="cr">15 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Conservation Biology</span><span class="cr">15 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Processing and Analysis of Biological Data</span><span class="cr">7.5 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Modelling Biological Systems</span><span class="cr">7.5 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Evolutionary Biology: Methods and Applications</span><span class="cr">15 cr</span></li>
+              </ul>
+            </div>
+            <div>
+              <p class="course-head">BSc in Biology · SLU and partner universities</p>
+              <ul class="course-list">
+                <li><span class="cname">Cryptogams and Nature Conservation</span><span class="cr">15 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Trees, Structure and Function</span><span class="cr">15 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Forest and Landscape Ecology</span><span class="cr">15 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Forest Management Methods</span><span class="cr">15 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Urban Tree and Forest Health</span><span class="cr">7.5 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">GIS: Introduction to Remote Sensing <span class="where-at">(Gothenburg)</span></span><span class="cr">7.5 cr</span><span class="tag">Distinction</span></li>
+                <li><span class="cname">Geographic Information Systems 1: Scientific Data <span class="where-at">(Umeå)</span></span><span class="cr">7.5 cr</span></li>
+                <li><span class="cname">Introduction to Bioinformatics <span class="where-at">(Skövde)</span></span><span class="cr">7.5 cr</span></li>
+                <li><span class="cname">Independent Project in Biology (BSc thesis)</span><span class="cr">15 cr</span></li>
+              </ul>
+            </div>
+          </div>
+          <p class="course-ongoing"><strong>In progress:</strong> Analysis of Environmental Data 2, covering Python for data wrangling, satellite image time series and NDVI in Google Earth Engine, and spatial analysis with GeoPandas and H3.</p>
+        </div>
+
+        <div class="referees reveal">
+          <h3>References</h3>
+          <div class="referee-grid">
+            <div class="referee">
+              <p class="ref-name">Dr François Maillard</p>
+              <p class="ref-role">Researcher, Department of Biology, Lund University</p>
+              <p class="ref-rel">MSc thesis co-supervisor and current employer</p>
+            </div>
+            <div class="referee">
+              <p class="ref-name">Prof. Johannes Rousk</p>
+              <p class="ref-role">Professor of Microbial Ecology, Department of Biology, Lund University</p>
+              <p class="ref-rel">MSc thesis co-supervisor</p>
+            </div>
+          </div>
+          <p class="ref-note">Contact details are available on request.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ OUTSIDE WORK ============ -->
+    <section class="section" id="interests" aria-labelledby="interests-title">
+      <div class="container interests-grid">
+        <div class="portrait-wrap reveal">
+          <figure class="portrait">
+            <img src="assets/headshot.webp" alt="Henry Nicholson with Robert, a gargoyle gecko, on the forehead" width="920" height="1200" loading="lazy">
+          </figure>
+          <!-- Label and arrow drawn in the photo's own proportions (4:5 box plus a band above it) -->
+          <svg class="gecko-arrow" viewBox="0 -15 100 140" aria-hidden="true" focusable="false">
+            <path class="ga-halo" d="M64 -3 C74 4 66 14 55.5 19 M55.5 19 l4 0.2 M55.5 19 l2.4 -3.2"/>
+            <path class="ga-line" d="M64 -3 C74 4 66 14 55.5 19 M55.5 19 l4 0.2 M55.5 19 l2.4 -3.2"/>
+            <text x="2" y="-6.5">Robert the Gargoyle Gecko</text>
+          </svg>
+        </div>
+        <div class="reveal">
+          <span class="section-label">06 · Outside work</span>
+          <h2 id="interests-title">Interests</h2>
+          <p class="interests-lead">Outside the laboratory I keep bioactive vivaria and freshwater aquaria, maintain long-term invertebrate cultures, grow carnivorous plants and culture slime moulds. Keeping these living systems stable over several years draws on the same care and routine as maintaining a culture collection.</p>
+          <ul class="chips">
+            <li>Bioactive vivaria and reptile husbandry</li>
+            <li>Freshwater aquaria, including captive breeding</li>
+            <li>Long-term invertebrate cultures</li>
+            <li>Carnivorous plants</li>
+            <li>In vitro culture of fungi and slime moulds</li>
+            <li>Bouldering</li>
+          </ul>
+          <div class="aquarium" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="section section-contact" id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="contact-card reveal">
+          <div>
+            <span class="section-label">07 · Contact</span>
+            <h2 id="contact-title">Get in touch</h2>
+            <p>I welcome enquiries about PhD positions, research roles and collaborations in fungal ecology. Please contact me by email.</p>
+          </div>
+          <div class="contact-links">
+            <!-- A click copies the address or iD to the clipboard; Cmd/Ctrl-click still opens the link. -->
+            <a href="mailto:henry.d.nicholson@gmail.com" data-copy="henry.d.nicholson@gmail.com" title="Click to copy the email address"><span class="cl-label"><svg class="icon"><use href="#i-mail"/></svg>Email</span><span class="cl-handle">henry.d.nicholson@gmail.com</span><svg class="icon cl-copy" aria-hidden="true"><use href="#i-copy"/></svg></a>
+            <a href="https://orcid.org/0009-0001-5105-5568" rel="me" data-copy="0009-0001-5105-5568" title="Click to copy the ORCID iD"><span class="cl-label"><svg class="icon"><use href="#i-id"/></svg>ORCID</span><span class="cl-handle">0009-0001-5105-5568</span><svg class="icon cl-copy" aria-hidden="true"><use href="#i-copy"/></svg></a>
+            <!-- Add LinkedIn when you have it:
+            <a href="https://www.linkedin.com/in/YOUR-NAME" rel="me"><span class="cl-label"><svg class="icon"><use href="#i-link"/></svg>LinkedIn</span><span class="cl-handle">YOUR-NAME</span></a>
+            -->
+          </div>
+          <span class="sr-only" id="copy-status" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span data-year>2026</span> Henry Nicholson</p>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/topo.js" defer></script>
+  <script src="js/life.js" defer></script>
+  <script src="js/ferns.js" defer></script>
+</body>
+</html>
