@@ -21,9 +21,32 @@
     el.textContent = new Date().getFullYear();
   });
 
+  /* ---------- Scroll position and page geometry, read once ----------
+     Reading the scroll position or an element's box after the page has changed makes the browser redo
+     style and layout on the spot, which is slow with thousands of animated hyphae: on phones it made
+     the animations stutter. So the scroll position is read once per scroll event, before anything has
+     changed, and element positions and the page height are measured only when the layout changes. The
+     viewport height ignores the mobile address bar sliding in and out. */
+  var view = { y: window.scrollY, vw: window.innerWidth, vh: window.innerHeight, docH: root.scrollHeight };
+  var remeasurers = [], remeasureTimer = 0;
+  function remeasure() {
+    var w = window.innerWidth, h = window.innerHeight;
+    if (w !== view.vw || Math.abs(h - view.vh) > 120) { view.vw = w; view.vh = h; }
+    view.y = window.scrollY;
+    view.docH = root.scrollHeight;
+    remeasurers.forEach(function (fn) { fn(); });
+  }
+  function remeasureSoon() {
+    clearTimeout(remeasureTimer);
+    remeasureTimer = setTimeout(function () { remeasure(); requestFigs(); requestMyco(); }, 120);
+  }
+  window.addEventListener('scroll', function () { view.y = window.scrollY; }, { passive: true });
+  window.addEventListener('resize', remeasureSoon);
+  if ('ResizeObserver' in window) new ResizeObserver(remeasureSoon).observe(document.body);
+
   /* ---------- Header border on scroll ---------- */
   var header = document.querySelector('.site-header');
-  function onScroll() { header.classList.toggle('scrolled', window.scrollY > 8); }
+  function onScroll() { header.classList.toggle('scrolled', view.y > 8); }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
@@ -678,11 +701,11 @@
       if (k < 1) requestAnimationFrame(intro);
     });
   });
-  var heroSection = canvas ? canvas.parentElement : null;
+  var heroSection = canvas ? canvas.parentElement : null, heroSecH = heroSection ? heroSection.offsetHeight || 1 : 1;
+  remeasurers.push(function () { if (heroSection) heroSecH = heroSection.offsetHeight || 1; });
   window.addEventListener('scroll', function () {
     if (!heroSection || reduceMotion) return;
-    var hh = heroSection.offsetHeight || 1;
-    heroTarget(LOAD_SHARE + (1 - LOAD_SHARE) * clamp01(window.scrollY / (hh * 1.2)));
+    heroTarget(LOAD_SHARE + (1 - LOAD_SHARE) * clamp01(view.y / (heroSecH * 1.2)));
   }, { passive: true });
 
   var heroW = canvas ? canvas.clientWidth : 0, heroH = canvas ? canvas.clientHeight : 0, heroTimer;
@@ -710,12 +733,18 @@
   function addFigAnim(el, update, start, end) {
     figAnims.push({ el: el, update: update, start: start || 0.95, end: end || 0.35, last: -1 });
   }
+  function measureFigs() {
+    var cache = new Map();
+    figAnims.forEach(function (a) { a.top = settledRect(a.el, cache).top + view.y; });
+  }
+  remeasurers.push(measureFigs);
   function updateFigAnims() {
-    var vh = window.innerHeight;
-    var atEnd = window.scrollY >= document.documentElement.scrollHeight - vh - 2;
+    var vh = view.vh;
+    var atEnd = view.y >= view.docH - vh - 2;
     figAnims.forEach(function (a) {
-      var r = a.el.getBoundingClientRect();
-      var p = (reduceMotion || atEnd) ? 1 : clamp01((vh * a.start - r.top) / (vh * (a.start - a.end)));
+      if (a.top == null) measureFigs();
+      var top = a.top - view.y;
+      var p = (reduceMotion || atEnd) ? 1 : clamp01((vh * a.start - top) / (vh * (a.start - a.end)));
       if (Math.abs(p - a.last) < 0.002) return;
       a.last = p;
       a.update(p);
@@ -1783,7 +1812,9 @@
     if (c.apply) { c.apply(p); return; }
     var S = p * c.maxStep;
     for (var i = 0; i < c.hyphae.length; i++) {
-      var hy = c.hyphae[i], prog = clamp01((S - hy.start) / hy.len);
+      // Progress in steps of 1/256 of the hypha: finer changes are invisible, and skipping them spares
+      // the browser most of the repainting while growth eases to a stop.
+      var hy = c.hyphae[i], prog = Math.round(clamp01((S - hy.start) / hy.len) * 256) / 256;
       if (hy.lyse) {   // overgrown by a more combative mycelium: fades once the invader has passed
         var gone = S >= hy.lyse;
         if (gone !== !!hy.gone) {
@@ -1851,7 +1882,7 @@
     lastTick = now;
     liveColonies.forEach(function (c) {
       var d = c.goal - c.shown;
-      if (Math.abs(d) < 0.0006) {
+      if (Math.abs(d) < 0.002) {
         c.shown = c.goal;
         liveColonies.delete(c);
       } else {
@@ -1905,10 +1936,14 @@
   }
 
   var mycoReady = false;
+  function measureSections() {
+    mycoItems.forEach(function (it) { var r = it.section.getBoundingClientRect(); it.top = r.top + view.y; it.height = r.height; });
+  }
+  remeasurers.push(measureSections);
   function updateMyco() {
     if (!mycoReady) return;
-    var vh = window.innerHeight;
-    var room = Math.max(0, document.documentElement.scrollHeight - vh - window.scrollY);   // scrolling still possible
+    var vh = view.vh;
+    var room = Math.max(0, view.docH - vh - view.y);   // scrolling still possible
     // 0 when y comes up to `start` of the screen height, 1 after `span` more. Anything too near the
     // end of the page to get that far up the screen finishes as the bottom of the page is reached.
     function progress(y, start, span) {
@@ -1916,7 +1951,8 @@
       return clamp01((vh * start - y) / Math.max(40, Math.min(span, vh * start - Math.max(0, best) - 1)));
     }
     mycoItems.forEach(function (it) {
-      var r = it.section.getBoundingClientRect();
+      if (it.top == null) measureSections();
+      var r = { top: it.top - view.y, bottom: it.top - view.y + it.height };
       if (r.bottom < -vh || r.top > vh * 2) return;
       if (!it.built) mountSection(it);   // scrolled here before the idle builder got to it
       if (!it.model || r.bottom < -80 || r.top > vh + 80) return;
@@ -1933,8 +1969,8 @@
       });
     });
     if (headerHy) {
-      var max = document.documentElement.scrollHeight - vh;
-      setGoal(headerHy.colony, max > 0 ? clamp01(window.scrollY / max) : 0);
+      var max = view.docH - vh;
+      setGoal(headerHy.colony, max > 0 ? clamp01(view.y / max) : 0);
     }
   }
   var mycoQueued = false;
@@ -1953,6 +1989,7 @@
   var whenIdle = window.requestIdleCallback || function (fn) { return setTimeout(fn, 120); };
   whenLayoutReady(function () {
     mycoReady = true;
+    remeasure();
     mountHeaderHypha();
     updateMyco();   // builds whatever is on or near the screen
     // Build the remaining sections one at a time while the browser is idle.

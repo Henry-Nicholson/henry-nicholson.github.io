@@ -192,7 +192,7 @@
       }
     }
     eachPinna(f, fr, function (P, pa, sd, Lp, Lf, e) {
-      var d = pinnaD(P, pa, sd, Lp, sp.width, Math.min(8, Math.round(Lf / 4)), e);
+      var d = pinnaD(P, pa, sd, Lp, sp.width, Math.min(f.jmax, Math.round(Lf / 4)), e);
       if (e > 0.97) out.pin += d; else out.young += d;
       if (Lp > 5) out.vein += 'M' + pt(P) + 'L' + pt(pinPt(P, pa, sd, Lp, 0, 0.5, 0)) + 'L' + pt(pinPt(P, pa, sd, Lp, 0, 0.9, 0));
     });
@@ -253,7 +253,7 @@
         var a0 = (side > 0 ? q[0] : -180 - q[0]) * Math.PI / 180 + (rand() - 0.5) * 0.06, dev = a0 + Math.PI / 2;
         var f = { sp: sp, x0: x0 + (rand() - 0.5) * 8, y0: H + 4, a0: a0, gmax: q[2], K: narrow ? Math.round(sp.pairs * 0.75) : sp.pairs,
                   lean: dev > 0.02 ? 1 : dev < -0.02 ? -1 : side, turn: 0.3 + 1.05 * Math.abs(dev) + 0.15 * rand(),
-                  start: j * 0.045 + rand() * 0.1, order: q[2] < 1 ? 9 : -Math.abs(dev), seed: rand() * 100 };
+                  start: j * 0.045 + rand() * 0.1, order: q[2] < 1 ? 9 : -Math.abs(dev), seed: rand() * 100, jmax: narrow ? 4 : 8 };
         f.sg = f.lean;
         size(f, Lbig * q[1] * (0.93 + 0.14 * rand()));
         for (var tries = 0; tries < 9 && !fits(f, blocks, w); tries++) size(f, f.L * 0.88);
@@ -271,18 +271,27 @@
   function render(force) {
     fronds.forEach(function (f) {
       var g = f.gmax * smooth((shown * 1.2 - f.start) / 0.8);
-      if (!force && (g === f.g || (Math.abs(g - f.g) < 0.004 && g > 0 && g < f.gmax))) return;
+      if (!force && (g === f.g || (Math.abs(g - f.g) < 0.015 && g > 0 && g < f.gmax))) return;
       f.g = g;
       draw(f, g);
     });
   }
 
   /* ---------- Scrolling ---------- */
-  // The ferns unroll over the last 560 px of the page and roll up again on the way back.
+  // The ferns unroll over the last 560 px of the page and roll up again on the way back. The scroll
+  // position is read on scroll events and the page height when the page changes size, never in the
+  // animation frame: reading them there, after other scripts have changed the page, forced the
+  // browser to recalculate layout every frame. The viewport height ignores the mobile address bar.
+  var se = document.scrollingElement || document.documentElement;
+  var vy = window.scrollY, vw = window.innerWidth, vh = window.innerHeight, docH = se.scrollHeight;
+  window.addEventListener('scroll', function () { vy = window.scrollY; }, { passive: true });
+  window.addEventListener('resize', function () {
+    if (window.innerWidth !== vw || Math.abs(window.innerHeight - vh) > 120) { vw = window.innerWidth; vh = window.innerHeight; }
+  });
+  if ('ResizeObserver' in window) new ResizeObserver(function () { docH = se.scrollHeight; }).observe(document.body);
   function goal() {
     if (reduceMotion) return 1;
-    var se = document.scrollingElement || document.documentElement;
-    return clamp(1 - (se.scrollHeight - window.scrollY - window.innerHeight) / 560, 0, 1);
+    return clamp(1 - (docH - vy - vh) / 560, 0, 1);
   }
   var near = false, raf = 0, last = 0, pending = false, waits = 0;
   function frame(now) {
@@ -312,6 +321,10 @@
     render(true);
     kick();
   }
+  // Prepared while the page is idle after loading, so the work does not land in the middle of a scroll.
+  window.addEventListener('load', function () {
+    setTimeout(function () { (window.requestIdleCallback || function (fn) { setTimeout(fn, 50); })(ensure, { timeout: 2000 }); }, 2500);
+  });
   if (reduceMotion || !('IntersectionObserver' in window)) {
     near = true;
     if (document.readyState === 'complete') ensure();
