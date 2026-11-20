@@ -151,6 +151,11 @@ strong { font-weight: 600; }
   border-bottom: 1px solid transparent;
   transition: border-color .2s ease;
 }
+@media (hover: none) and (pointer: coarse) {
+  /* Touchscreens: a solid header. A blurred see-through one has to be redrawn on every scroll step,
+     which made iPhone scrolling stutter (see calm in js/main.js). */
+  .site-header { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--bg); }
+}
 .site-header.scrolled { border-bottom-color: var(--line); }
 
 .header-inner { display: flex; align-items: center; gap: 12px; height: 64px; }
