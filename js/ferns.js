@@ -10,7 +10,8 @@
   var footer = document.querySelector('.site-footer');
   if (!footer || !window.requestAnimationFrame) return;
   var NS = 'http://www.w3.org/2000/svg';
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // On touchscreens the ferns are shown fully open, as for reduced motion (see calm in js/main.js).
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   function seeded(seed) {
     return function () {

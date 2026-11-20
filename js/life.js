@@ -58,13 +58,20 @@
   }
 
   /* ---------- One animation loop for everything here ---------- */
-  var actors = [], running = false, last = 0;
+  // On touchscreens the animals move at half the frame rate, which halves the redrawing (see calm in js/main.js).
+  var actors = [], running = false, last = 0, calm = window.matchMedia('(hover: none) and (pointer: coarse)').matches, skipped = false, carry = 0;
   function frame(now) {
-    var dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60, any = false;
+    var dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
     last = now;
-    actors.forEach(function (a) { if (a.on) { a.step(dt); any = true; } });
-    if (any) requestAnimationFrame(frame);
-    else { running = false; last = 0; }
+    if (!actors.some(function (a) { return a.on; })) { running = false; last = 0; carry = 0; return; }
+    if (calm) {
+      skipped = !skipped;
+      if (skipped) { carry = dt; requestAnimationFrame(frame); return; }
+      dt = Math.min(0.07, dt + carry);
+      carry = 0;
+    }
+    actors.forEach(function (a) { if (a.on) a.step(dt); });
+    requestAnimationFrame(frame);
   }
   function wake() {
     if (running || reduceMotion) return;

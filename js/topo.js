@@ -174,7 +174,7 @@
     }
     // Drawn in once, contour by contour, like a plotter tracing the map (a CSS animation, so it
     // also plays when a page opened in a background tab is first shown).
-    if (animate && !reduceMotion) {
+    if (animate && !reduceMotion && !window.matchMedia('(hover: none) and (pointer: coarse)').matches) {   // drawn at once on touchscreens
       svg.classList.add('draw');
       paths.forEach(function (pk) {
         pk[0].setAttribute('pathLength', '1');

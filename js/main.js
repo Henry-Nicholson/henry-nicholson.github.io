@@ -4,6 +4,10 @@
 
   var root = document.documentElement;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Touchscreens (phones, tablets) get a calmer page: WebKit, which every iPhone browser uses, redraws
+  // large animated SVGs slowly while scrolling, so there the networks, mushrooms and plants appear
+  // fully grown instead of growing with the scroll, and nothing fades in.
+  var calm = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   var darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
   // Deterministic random numbers so the drawings look the same on every visit.
@@ -1871,7 +1875,7 @@
   // Eased growth: scroll sets each colony's goal; a frame loop moves its shown growth towards it.
   var liveColonies = new Set(), growing = false, lastTick = 0;
   function setGoal(c, p) {
-    if (reduceMotion) { setColony(c, p); return; }
+    if (reduceMotion || calm) { setColony(c, p); return; }
     if (c.shown == null) c.shown = c.instant ? p : 0;
     c.goal = p;
     liveColonies.add(c);
@@ -1909,6 +1913,8 @@
       item.section.insertBefore(item.svg, item.section.firstChild);
     }
     item.section.classList.toggle('has-runner', !!(item.model && item.model.hasBorder));
+    // Calm mode: shown fully grown as soon as it is built, so nothing pops in at the screen edge.
+    if (calm && item.model) item.model.colonies.concat(item.model.fruits || []).forEach(function (c) { setColony(c, 1); });
     item.built = true;
     item.w = item.section.clientWidth;
     item.h = item.section.clientHeight;
@@ -1959,12 +1965,12 @@
       it.model.colonies.forEach(function (c) {
         // Starts as the colony's origin comes up from below the screen, done near the top.
         var y = r.top - it.model.top + c.y;
-        var p = reduceMotion ? 1 : progress(y, 1.02, vh * 0.9);
+        var p = (reduceMotion || calm) ? 1 : progress(y, 1.02, vh * 0.9);
         setGoal(c, p * p * (3 - 2 * p));
       });
       (it.model.fruits || []).forEach(function (f) {
         var y = r.top - it.model.top + f.y;
-        var p = reduceMotion ? 1 : progress(y, 1.0, vh * 0.75);
+        var p = (reduceMotion || calm) ? 1 : progress(y, 1.0, vh * 0.75);
         setGoal(f, p * p * (3 - 2 * p));
       });
     });
@@ -2068,7 +2074,7 @@
   });
 
   /* ---------- Scroll reveal ---------- */
-  if (!reduceMotion && 'IntersectionObserver' in window) {
+  if (!reduceMotion && !calm && 'IntersectionObserver' in window) {
     root.classList.add('reveal-ready');
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
