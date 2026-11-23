@@ -881,7 +881,7 @@
      foot stays planted while the body moves over it. Its colours follow the gecko in the portrait:
      a rusty dorsal stripe edged with pale pinstripes on mottled grey-brown, with broad toe pads.
      ===================================================================== */
-  var TEXT = 'h1,h2,h3,p,li,.section-label,.aquarium,.gecko-arrow text';
+  var TEXT = 'h1,h2,h3,p,li,.btn,.section-label,.aquarium,.gecko-arrow text';
 
   // A route across the section through the space around the text, passing over the portrait.
   function planRoute(w, h) {
