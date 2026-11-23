@@ -1081,3 +1081,17 @@ strong { font-weight: 600; }
 .fern-layer .fern-edge { fill: none; stroke: var(--fv); stroke-width: .55; stroke-linecap: round; stroke-linejoin: round; opacity: .85; }
 .fern-layer .fern-scale { fill: none; stroke: var(--fs); stroke-width: .7; stroke-linecap: round; }
 @media print { .fern-layer { display: none; } }
+
+/* ---------- Hobbies page (hobbies.html) and its link in "Outside work" ---------- */
+.interests-more { margin-top: 18px; }
+.prose + .gallery { margin-top: 32px; }
+.hobby-mosaic { margin-top: 40px; }
+.project-meta a { color: inherit; text-underline-offset: 3px; }
+.gallery.duo { grid-template-columns: 1.9fr 1fr; }
+.gallery.pair { grid-template-columns: 1fr 1fr; }
+.gallery.pair .photo img { height: 380px; }
+@media (max-width: 860px) {
+  .gallery.duo .photo:first-child, .gallery.pair .photo:first-child { grid-column: auto; }
+  .gallery.pair .photo img { height: 300px; }
+}
+@media (max-width: 520px) { .hobby-mosaic .tile:nth-child(3) { grid-column: 1 / -1; } }
