@@ -525,13 +525,23 @@
   // Growth forms, so that neighbouring colonies differ as different species do:
   // - cord: a few straight, thick leading hyphae with sparse branches, and combative;
   // - dense: slow, compact and much branched, and weak in combat;
-  // - fan: feathery, near-parallel strands from narrow-angled branching.
-  // Unlisted colonies keep the default effuse form.
+  // - fan: feathery, near-parallel strands from narrow-angled branching;
+  // - sinuous: meandering, wavy hyphae with wide branches;
+  // - forked: regular, narrow forks that switch from side to side;
+  // - sparse: long, straight runners with few, widely spaced branches.
+  // Unlisted colonies keep the default effuse form. Each form has its own colour in css/style.css.
   var MORPHS = {
     cord: { speed: 1.15, noise: 0.55, every: 1.7, angle: [0.45, 0.9], hyphae: 0.55, fuse: 3, combat: 0.65 },
     dense: { speed: 0.75, noise: 1.25, every: 0.5, angle: [0.9, 1.5], hyphae: 1.25, life: 0.7, combat: 0.15 },
-    fan: { speed: 1, noise: 0.35, every: 0.9, angle: [0.25, 0.55], alternate: 0.95, hyphae: 0.9, combat: 0.3 }
+    fan: { speed: 1, noise: 0.35, every: 0.9, angle: [0.25, 0.55], alternate: 0.95, hyphae: 0.9, combat: 0.3 },
+    sinuous: { speed: 0.95, noise: 2.4, every: 1.15, angle: [0.75, 1.3], hyphae: 0.9, combat: 0.35 },
+    forked: { speed: 1, noise: 0.45, every: 0.75, angle: [0.42, 0.68], alternate: 0.92, hyphae: 1.05, combat: 0.3 },
+    sparse: { speed: 1.25, noise: 0.4, every: 2.3, angle: [0.55, 1], hyphae: 0.5, fuse: 2.6, combat: 0.5 }
   };
+  // One species per section of a page, so each looks different. The order keeps neighbouring sections
+  // unlike each other, and each page starts at a different point in it.
+  var SECTION_SPECIES = ['effuse', 'sinuous', 'fan', 'cord', 'forked', 'dense', 'sparse'];
+  var PAGE_SHIFT = { index: 0, thesis: 3, hobbies: 5 }[(location.pathname.split('/').pop() || 'index').replace('.html', '')] || 0;
   var MORPH_KEYS = ['effuse', 'cord', 'dense', 'fan'];
   function withMorph(o, morph) {
     var m = MORPHS[morph];
@@ -1521,6 +1531,7 @@
     if (w < 50 || h < 50) return null;
     var rand = seeded(9001 + index * 131);
     var leftFirst = index % 2 === 0, narrow = w < 760;
+    var species = SECTION_SPECIES[(index + PAGE_SHIFT) % SECTION_SPECIES.length];   // this section's fungus
     var scale = Math.max(0.4, Math.min(1, w / 1280));
     var hasBorder = parseFloat(getComputedStyle(section).borderTopWidth) > 0;
     // Headroom above the section: room for the divider network, and for fruiting bodies on cards near the top.
@@ -1545,6 +1556,7 @@
       }, rand);
       run.y = top;
       run.kind = 'runner';
+      run.morph = species;   // the section's colour; it keeps its own shape along the divider
       colonies.push(run);
     }
 
@@ -1616,13 +1628,11 @@
       } });
     });
 
-    // These colonies are separate individuals, some of other growth forms, grown together so they meet:
+    // These colonies are separate individuals of the section's species, grown together so they meet:
     // they avoid each other and deadlock at a pigmented front, unless a combative one overgrows another.
     // They share one scroll position, so the meeting plays out as it would in real time.
     if (community.length) {
-      var grown = growCommunity(community.map(function (m, k) {
-        return withMorph(m.o, k > 0 && rand() < 0.55 ? MORPH_KEYS[1 + Math.floor(rand() * 3)] : 'effuse');
-      }), rand);
+      var grown = growCommunity(community.map(function (m) { return withMorph(m.o, species); }), rand);
       var cyAvg = community.reduce(function (sum, m) { return sum + m.y; }, 0) / community.length;
       grown.forEach(function (col) {
         col.y = cyAvg;
@@ -1666,6 +1676,7 @@
       }, rand);
       mat.y = hst.y0;
       mat.kind = 'side';
+      mat.morph = species;
       colonies.push(mat);
     }
     for (var hk = 0; hk < hosts.length && fruits.length < (narrow ? 1 : 2); hk++) {
