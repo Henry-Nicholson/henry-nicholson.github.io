@@ -922,6 +922,9 @@ strong { font-weight: 600; }
 .gecko-layer .gk-limb { fill: none; stroke: var(--gk-limb); stroke-linecap: round; stroke-linejoin: round; }
 .gecko-layer .gk-pad { fill: var(--gk-pad); }
 .gecko-layer .gk-eye { fill: var(--gk-eye); stroke: var(--gk-eye-rim); stroke-width: .7; }
+.gecko-layer .gk-tongue { fill: none; stroke: #e0848c; stroke-linecap: round; stroke-linejoin: round; }
+/* The fish react to a tap or click (js/life.js), so the tank shows a pointer. */
+@media (prefers-reduced-motion: no-preference) { .aquarium { cursor: pointer; } }
 .gecko-layer .gk-nostril { fill: var(--gk-eye); opacity: .7; }
 @media print { .topo, .aquarium, .gecko-layer { display: none; } }
 
@@ -1179,3 +1182,7 @@ html.lb-lock { overflow: hidden; scrollbar-gutter: stable; }
   .lightbox, .lb-figure, .lb-img { transition: none; }
   .lb-figure { transform: none; }
 }
+
+/* ---------- Slime mould (js/slime.js) creeping over the "Fungi and slime moulds" section of hobbies.html ---------- */
+.slime-layer { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
+@media print { .slime-layer { display: none; } }
