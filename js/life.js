@@ -1,6 +1,7 @@
 // Animals around the "Outside work" section: a gecko that crosses the page in short bursts, and a
 // small planted aquarium with medaka, corydoras and kuhli loaches. Both run only while they are on
-// screen, and hold still for visitors who prefer reduced motion.
+// screen, and hold still for visitors who prefer reduced motion. A tap or click startles them (see
+// "Taps and clicks" near the end).
 (function () {
   'use strict';
 
@@ -645,12 +646,12 @@
           s.y += (foot(s.x) - s.y) * Math.min(1, dt * 8);
           s.pick = 0;
           if (Math.abs(dx) < 0.5 || s.timer <= 0) { s.mode = 'graze'; s.timer = 1.5 + rand() * 4; }
-        } else {   // swimming a short hop, swimmerets beating, landing further along
-          s.hop = Math.min(1, s.hop + dt * 22 / s.hd);
-          s.face = s.tx >= s.sx ? 1 : -1;
+        } else {   // swimming a short hop, swimmerets beating, landing further along; or, startled, a flick backwards
+          s.hop = Math.min(1, s.hop + dt * (s.back ? 110 : 22) / s.hd);
+          if (!s.back) s.face = s.tx >= s.sx ? 1 : -1;
           s.x = s.sx + (s.tx - s.sx) * smooth(s.hop);
           s.y = s.sy + (foot(s.tx) - s.sy) * s.hop - Math.sin(s.hop * Math.PI) * s.arc;
-          if (s.hop >= 1) { s.mode = 'graze'; s.timer = 1.5 + rand() * 3; }
+          if (s.hop >= 1) { s.mode = 'graze'; s.timer = 1.5 + rand() * 3; s.back = false; }
         }
         var slope = s.mode === 'swim' ? 0 : (foot(s.x + 3) - foot(s.x - 3)) / 6;   // stand along the surface
         s.tilt += (Math.atan(slope) * s.face - s.tilt) * Math.min(1, dt * 6);
@@ -735,11 +736,11 @@
         } else if (c.mode === 'hop') {
           var dx = c.tx - c.x;
           c.face = dx >= 0 ? 1 : -1;
-          c.x += c.face * Math.min(Math.abs(dx), 32 * dt);
+          c.x += c.face * Math.min(Math.abs(dx), 32 * (c.fast || 1) * dt);
           var hp = 1 - Math.abs(c.tx - c.x) / c.hd;
           c.y = restY - Math.sin(hp * Math.PI) * c.arc;
           c.tilt += (-0.04 - c.tilt) * Math.min(1, dt * 6);
-          if (Math.abs(c.tx - c.x) < 0.5) { c.mode = 'root'; c.timer = 1.2 + rand() * 3.2; }
+          if (Math.abs(c.tx - c.x) < 0.5) { c.mode = 'root'; c.timer = 1.2 + rand() * 3.2; c.fast = 1; }
         } else if (c.mode === 'up') {
           c.y -= 75 * dt;
           c.x = clamp(c.x + c.face * 14 * dt, 12, W - 12);
@@ -754,7 +755,7 @@
           if (c.y >= restY) { c.y = restY; c.mode = 'root'; c.timer = 1 + rand() * 2; }
         }
         c.turn += (c.face - c.turn) * Math.min(1, dt * 6);
-        c.ph += dt * (c.mode === 'root' ? 3.5 : c.mode === 'down' ? 2 : 15);
+        c.ph += dt * (c.mode === 'root' ? 3.5 : c.mode === 'down' ? 2 : c.fast > 1 ? 26 : 15);
         c.el.tail.setAttribute('transform', 'rotate(' + f1(Math.sin(c.ph) * (c.mode === 'root' ? 4 : 13)) + ' -8.5 0)');
         placeFish(c, c.tilt);
       });
@@ -769,8 +770,9 @@
           if (k.mode === 'rest') { k.mode = 'go'; k.timer = 1.8 + rand() * 4; }
           else { k.mode = 'rest'; k.timer = 1.2 + rand() * 4; }
         }
-        var vt = k.mode === 'go' ? 26 : 0;
-        k.v += (vt - k.v) * Math.min(1, dt * 3);
+        if (k.bolt > 0) k.bolt -= dt;
+        var vt = k.mode === 'go' ? (k.bolt > 0 ? 85 : 26) : 0;
+        k.v += (vt - k.v) * Math.min(1, dt * (k.bolt > 0 ? 9 : 3));
         if (k.v > 0.3) {
           // Wander, mostly within a band above the sand, turning back at the glass.
           var yWant = sand - 4 - (k.mode === 'go' && Math.sin(time * 0.3 + k.ph) > 0.6 ? 22 : 0);
@@ -780,7 +782,7 @@
           k.a += turn;
           var ca = Math.cos(k.a), sa = Math.sin(k.a);
           if (Math.abs(sa) > 0.55) { k.a = Math.atan2(clamp(sa, -0.55, 0.55), ca); ca = Math.cos(k.a); sa = Math.sin(k.a); }
-          k.ph += dt * 9;
+          k.ph += dt * (k.bolt > 0 ? 17 : 9);
           var wig = Math.cos(k.ph) * 0.9;   // the head snakes up and down as it swims
           k.x = clamp(k.x + (ca - sa * wig) * k.v * dt, 4, W - 4);
           k.y = clamp(k.y + (sa + ca * wig) * k.v * dt, surf + 30, sand - 2.6);
@@ -857,15 +859,62 @@
       stepCorys(dt);
       stepMedaka(dt);
     }
+
+    // A tap on the tank (in tank coordinates): animals near it bolt away, as fish do from a tap on the glass.
+    // The medaka shoal turns away as one, the nearest fish fastest; corydoras dash off along the sand; kuhli
+    // loaches bolt; shrimp flick backwards, tail first; the vampire shrimp draws a fan in.
+    function poke(px, py) {
+      var R = narrow ? 70 : 90;
+      function dist(x, y) { var dx = x - px, dy = y - py; return Math.sqrt(dx * dx + dy * dy); }
+      medaka.forEach(function (f) {
+        var d = dist(f.x, f.y), near = d < R;
+        if (!near && rand() < 0.4) return;
+        var away = Math.atan2(f.y - py, f.x - px) + (rand() - 0.5) * 0.6, kick = near ? 40 + 110 * (1 - d / R) : 28;
+        f.wa = away;
+        f.dart = near ? 0.55 + rand() * 0.25 : 0.25;
+        f.vx += Math.cos(away) * kick;
+        f.vy += Math.sin(away) * kick * 0.5;
+      });
+      corys.forEach(function (c) {
+        if (dist(c.x, c.y) > R || c.mode === 'up' || c.mode === 'down') return;
+        var dir = c.x >= px ? 1 : -1;
+        c.tx = clamp(c.x + dir * (55 + rand() * 45), 16, W - 16);
+        if (Math.abs(c.tx - c.x) < 20) c.tx = clamp(c.x - dir * (55 + rand() * 45), 16, W - 16);   // cornered: off the other way
+        c.hd = Math.max(1, Math.abs(c.tx - c.x));
+        c.arc = 4 + rand() * 6;
+        c.mode = 'hop';
+        c.fast = 3.4;
+      });
+      kuhlis.forEach(function (k) {
+        if (dist(k.x, k.y) > R) return;
+        k.mode = 'go';
+        k.timer = 0.8 + rand() * 0.5;
+        k.bolt = 0.8;
+        k.a = (k.x >= px ? 0 : Math.PI) + (rand() - 0.5) * 0.4;
+      });
+      shrimp.forEach(function (s) {
+        if (dist(s.x, s.y) > R * 0.85) return;
+        if (s.kind === 'vampire') { s.sweep = 1; s.sweepSide = rand() < 0.5 ? 0 : 1; return; }
+        s.mode = 'swim';
+        s.sx = s.x;
+        s.sy = s.y;
+        s.hop = 0;
+        s.tx = clamp(s.x - s.face * (24 + rand() * 20), 10, W - 10);
+        s.hd = Math.max(8, Math.abs(s.tx - s.x));
+        s.arc = 6 + rand() * 10;
+        s.back = true;
+      });
+    }
     make('rect', { class: 'tk-glass', x: 0.5, y: TOP + 0.5, width: W - 1, height: H - 1, rx: 14 }, root);
     growEmersed(root, W, TOP + surf, narrow, rand, lilyX, pothX);
     box.appendChild(root);
     step(0);
-    return { svg: root, step: step };
+    return { svg: root, step: step, poke: poke, size: [W, H + TOP], top: TOP };
   }
 
   function setupTank(box) {
     var scene = null, actor = { on: false, step: function (dt) { if (scene) scene.step(dt); } };
+    tanks.push({ box: box, get: function () { return scene; } });
     function build() {
       if (scene) scene.svg.remove();
       scene = buildTank(box);
@@ -1021,6 +1070,8 @@
     var pins = make('path', { class: 'gk-pin' }, root), spots = make('path', { class: 'gk-spot' }, root);
     var bumps = make('path', { class: 'gk-bump' }, root), marks = make('path', { class: 'gk-mark', 'stroke-width': f1(L * 0.026) }, root);
     var eyes = make('path', { class: 'gk-eye' }, root), nostrils = make('path', { class: 'gk-nostril' }, root);
+    // The tongue, out only while the gecko licks an eye clean (geckos have no eyelids).
+    var tongue = make('path', { class: 'gk-tongue', 'stroke-width': f1(L * 0.017) }, root);
     root.querySelector('.gk-upper') && legEls.forEach(function (l) {
       l.upper.setAttribute('stroke-width', f1(L * 0.046));
       l.lower.setAttribute('stroke-width', f1(L * 0.034));
@@ -1045,7 +1096,7 @@
     var OFF = [0, 0.5, 0.5, 0];   // left fore with right hind, then right fore with left hind
     var STRIDE = 0.21 * L, DUTY = 0.38, L1 = 0.095 * L, L2 = 0.085 * L;   // limbs about 18% of total length
     var feet = [0, 1, 2, 3].map(function () { return { pos: [0, 0], from: [0, 0], swing: false }; });
-    var g = { s: 0, v: 0, mode: 'wait', timer: 0.8, speed: L * 1.1, A: 0.055 * L };
+    var g = { s: 0, v: 0, mode: 'wait', timer: 0.8, speed: L * 1.1, A: 0.055 * L, wag: 0, wagT: 0, lick: 0, lickSide: 1 }, lastC = null;
 
     function home(i, s) {
       var q = at(s - G[i] * L), nx = -q[3], ny = q[2], fwd = FRONT[i] ? 0.05 * L : -0.03 * L, lat = 0.14 * L * SIDE[i];
@@ -1057,8 +1108,13 @@
       var N = 34, ph = TAU * g.s / STRIDE, C = [], NB = [], left = [], right = [];
       for (var k = 0; k < N; k++) {
         var u = k / (N - 1), q = at(g.s - u * L), lat = g.A * bend(u, ph);
+        if (g.wag > 0 && u > 0.52) {   // a startled flick that runs down the tail and dies away
+          var kt = (u - 0.52) / 0.48;
+          lat += L * 0.08 * g.wag * kt * Math.sin(g.wagT * 15 - kt * 3.4);
+        }
         C.push([q[0] - q[3] * lat, q[1] + q[2] * lat]);
       }
+      lastC = C;
       for (k = 0; k < N; k++) {
         var a = C[Math.max(0, k - 1)], b = C[Math.min(N - 1, k + 1)], tx = a[0] - b[0], ty = a[1] - b[1], tl = Math.sqrt(tx * tx + ty * ty) || 1;
         NB.push([-ty / tl, tx / tl, tx / tl, ty / tl]);   // normal, then direction towards the head
@@ -1130,6 +1186,18 @@
       var nd = '';
       [0.35, -0.35].forEach(function (f) { var p = side(0.012, f), r = L * 0.005; nd += 'M' + f1(p[0] - r) + ' ' + f1(p[1]) + ' a' + f1(r) + ' ' + f1(r) + ' 0 1 0 ' + f1(2 * r) + ' 0 a' + f1(r) + ' ' + f1(r) + ' 0 1 0 ' + f1(-2 * r) + ' 0 '; });
       nostrils.setAttribute('d', nd);
+      var tgd = '';
+      if (g.lick > 0) {
+        // Out of the mouth, curling up over one eye, then back in.
+        var ext = Math.sin(Math.PI * g.lick), sg2 = g.lickSide, h0 = NB[0], S0 = side(0, 0), E0 = side(0.07, 0.95 * sg2);
+        var Q0 = [S0[0] + (h0[2] + h0[0] * sg2) * L * 0.05, S0[1] + (h0[3] + h0[1] * sg2) * L * 0.05];
+        tgd = 'M' + f1(S0[0]) + ' ' + f1(S0[1]);
+        for (var ti = 1; ti <= 8; ti++) {
+          var tt = ext * ti / 8, mt = 1 - tt;
+          tgd += ' L' + f1(mt * mt * S0[0] + 2 * mt * tt * Q0[0] + tt * tt * E0[0]) + ' ' + f1(mt * mt * S0[1] + 2 * mt * tt * Q0[1] + tt * tt * E0[1]);
+        }
+      }
+      tongue.setAttribute('d', tgd);
 
       // Legs: two-segment limbs from shoulder or hip to the planted foot, elbows back, knees forward.
       feet.forEach(function (f, i) {
@@ -1187,13 +1255,16 @@
       render();
     }
     function step(dt) {
-      if (g.mode === 'done') return;
+      var react = g.wag > 0 || g.lick > 0;
+      if (g.wag > 0) { g.wagT += dt; g.wag = Math.max(0, g.wag - dt * 0.85); }
+      if (g.lick > 0) { g.lick += dt / 0.8; if (g.lick >= 1) g.lick = 0; }
+      if (g.mode === 'done') { if (react) render(); return; }
       g.timer -= dt;
       if (g.timer <= 0) {
-        if (g.mode === 'go') { g.mode = 'pause'; g.timer = 0.25 + rand() * 0.6; }
+        if (g.mode === 'go' || g.mode === 'dash') { g.mode = 'pause'; g.timer = 0.25 + rand() * 0.6; }
         else { g.mode = 'go'; g.timer = 0.6 + rand() * 0.7; }
       }
-      var vt = g.mode === 'go' ? g.speed : 0;
+      var vt = g.mode === 'go' ? g.speed : g.mode === 'dash' ? g.speed * 3.4 : 0;
       if (opts.stopAtEnd) {
         if (g.s >= total) { settle(); return; }
         vt *= clamp((total - g.s) / (L * 0.35), 0.2, 1);   // slowing to a stop
@@ -1203,8 +1274,29 @@
         g.s += g.v * dt;
         updateFeet();
         render();
-      }
+      } else if (react) render();
       if (g.s - L * 1.2 > total) { g.mode = 'done'; root.style.display = 'none'; }
+    }
+    // Whether a point (in the layer's coordinates) is on the gecko's body, with some slack around it.
+    function hit(x, y, pad) {
+      if (!lastC || root.style.display === 'none') return false;
+      for (var k = 0; k < lastC.length; k++) {
+        var r = halfW(k / (lastC.length - 1)) * L * slim + pad, dx = lastC[k][0] - x, dy = lastC[k][1] - y;
+        if (dx * dx + dy * dy < r * r) return true;
+      }
+      return false;
+    }
+    // A tap: a startled tail flick, and a dash if it is on its way somewhere. Once it has settled it
+    // licks an eye instead.
+    function poke() {
+      g.wag = 1;
+      g.wagT = 0;
+      if (g.mode === 'done' || (opts.stopAtEnd && g.s > total - L * 0.4)) {
+        if (!g.lick) { g.lick = 0.001; g.lickSide = rand() < 0.5 ? 1 : -1; }
+      } else {
+        g.mode = 'dash';
+        g.timer = 0.4 + rand() * 0.25;
+      }
     }
     function restart(reverse) {
       if (reverse) { P.reverse(); tans.reverse(); tans.forEach(function (t, i) { tans[i] = [-t[0], -t[1]]; }); }
@@ -1225,7 +1317,7 @@
     }
     plantAll();
     render();
-    return { step: step, restart: restart, rest: rest, done: function () { return g.mode === 'done'; } };
+    return { step: step, restart: restart, rest: rest, hit: hit, poke: poke, done: function () { return g.mode === 'done'; } };
   }
 
   function setupGecko() {
@@ -1236,6 +1328,7 @@
       // Each time the section comes back into view after the gecko has gone, it crosses again the other way.
       seen: function (on) { if (on && gecko && gecko.done() && !reduceMotion) { crossings++; gecko.restart(true); } }
     };
+    geckoHosts.push({ host: section, get: function () { return gecko; }, on: function () { return actor.on; } });
     function build() {
       if (layer) layer.remove();
       layer = null;
@@ -1261,6 +1354,7 @@
     var hero = document.querySelector('.hero'), h1 = hero && hero.querySelector('h1');
     if (!hero || !h1) return;
     var layer = null, gecko = null, rand = seeded(1618), actor = { on: false, step: function (dt) { if (gecko) gecko.step(dt); } };
+    geckoHosts.push({ host: hero, get: function () { return gecko; }, on: function () { return actor.on; } });
     function build() {
       if (layer) layer.remove();
       layer = null;
@@ -1327,6 +1421,50 @@
     build();
     watch(actor, hero, 0.3);
     onResize(hero, build);
+  }
+
+  /* ---------- Taps and clicks ---------- */
+  // The layers the animals are drawn in let the pointer through to the page, so a tap is matched to an
+  // animal by position: a gecko under it is startled, and a tap on the aquarium startles what is near it.
+  var geckoHosts = [], tanks = [];
+  function geckoAt(e, pad) {
+    for (var i = 0; i < geckoHosts.length; i++) {
+      var h = geckoHosts[i], gk = h.get();
+      if (!gk || !h.on()) continue;
+      var r = h.host.getBoundingClientRect();
+      if (gk.hit(e.clientX - r.left, e.clientY - r.top, pad)) return { gecko: gk, host: h.host };
+    }
+    return null;
+  }
+  if (!reduceMotion && window.PointerEvent) {
+    document.addEventListener('pointerdown', function (e) {
+      if (e.button > 0) return;
+      var hitG = geckoAt(e, e.pointerType === 'mouse' ? 6 : 14);
+      if (hitG) { hitG.gecko.poke(); wake(); return; }
+      for (var i = 0; i < tanks.length; i++) {
+        var sc = tanks[i].get(), r = tanks[i].box.getBoundingClientRect();
+        if (!sc || e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) continue;
+        sc.poke((e.clientX - r.left) * sc.size[0] / r.width, (e.clientY - r.top) * sc.size[1] / r.height - sc.top);
+        wake();
+      }
+    }, { passive: true });
+    // With a mouse, a pointer cursor over a gecko shows that it can be clicked (the tank has one in the CSS).
+    var hoverHost = null, moveQueued = false, lastMove = null;
+    document.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      lastMove = e;
+      if (moveQueued) return;
+      moveQueued = true;
+      requestAnimationFrame(function () {
+        moveQueued = false;
+        var over = geckoAt(lastMove, 4), host = over ? over.host : null;
+        if (host !== hoverHost) {
+          if (hoverHost) hoverHost.style.cursor = '';
+          if (host) host.style.cursor = 'pointer';
+          hoverHost = host;
+        }
+      });
+    }, { passive: true });
   }
 
   whenReady(function () {

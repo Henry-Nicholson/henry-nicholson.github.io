@@ -1987,6 +1987,7 @@
   }
 
   document.querySelectorAll('.section').forEach(function (section, index) {
+    if (section.hasAttribute('data-slime')) return;   // left to the slime mould (js/slime.js)
     mycoItems.push({ section: section, index: index, built: false });
   });
   window.addEventListener('scroll', requestMyco, { passive: true });
