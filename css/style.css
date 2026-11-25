@@ -18,8 +18,11 @@
   --ochre-soft: #f5e6c6;
   --hyphae: 47, 107, 79;          /* RGB of the hero network */
   --hyphae-cord: 128, 101, 66;    /* growth forms of other species: cord-formers, dense and fan-like */
-  --hyphae-dense: 104, 146, 120;
+  --hyphae-dense: 168, 90, 116;   /* rose */
   --hyphae-fan: 46, 92, 122;
+  --hyphae-sinuous: 170, 86, 40;  /* rust */
+  --hyphae-forked: 122, 88, 164;  /* lilac */
+  --hyphae-sparse: 150, 122, 14;  /* sulphur */
   --pigment: 122, 92, 58;         /* melanised hyphae at an interaction front */
   --cta-bg: #2f6b4f;              /* contact card */
   --cta-ink: #ffffff;
@@ -48,8 +51,8 @@
     --ochre-soft: #3b2e17;
     --hyphae: 124, 193, 156;
     --hyphae-cord: 206, 178, 134;
-    --hyphae-dense: 172, 214, 190;
-    --hyphae-fan: 132, 182, 214;
+    --hyphae-dense: 230, 158, 180;
+    --hyphae-fan: 132, 182, 214; --hyphae-sinuous: 228, 152, 106; --hyphae-forked: 194, 166, 232; --hyphae-sparse: 228, 206, 98;
     --pigment: 204, 168, 122;
     --cta-bg: #1f3a2c;
     --cta-ink: #e5ebe7;
@@ -73,8 +76,8 @@
   --ochre-soft: #3b2e17;
   --hyphae: 124, 193, 156;
   --hyphae-cord: 206, 178, 134;
-  --hyphae-dense: 172, 214, 190;
-  --hyphae-fan: 132, 182, 214;
+  --hyphae-dense: 230, 158, 180;
+  --hyphae-fan: 132, 182, 214; --hyphae-sinuous: 228, 152, 106; --hyphae-forked: 194, 166, 232; --hyphae-sparse: 228, 206, 98;
   --pigment: 204, 168, 122;
     --cta-bg: #1f3a2c;
     --cta-ink: #e5ebe7;
@@ -999,6 +1002,18 @@ strong { font-weight: 600; }
 .myco .m-fan .hy { stroke: rgb(var(--hyphae-fan)); }
 .myco .m-fan .tip, .myco .m-fan .mark.contact { fill: rgb(var(--hyphae-fan)); }
 .myco .m-fan .mark.attach { stroke: rgb(var(--hyphae-fan)); }
+.myco .m-sinuous .hy { stroke: rgb(var(--hyphae-sinuous)); }
+.myco .m-sinuous .tip, .myco .m-sinuous .mark.contact { fill: rgb(var(--hyphae-sinuous)); }
+.myco .m-sinuous .mark.attach { stroke: rgb(var(--hyphae-sinuous)); }
+.myco .m-forked .hy { stroke: rgb(var(--hyphae-forked)); }
+.myco .m-forked .g0 { stroke-width: 1.3; }
+.myco .m-forked .tip, .myco .m-forked .mark.contact { fill: rgb(var(--hyphae-forked)); }
+.myco .m-forked .mark.attach { stroke: rgb(var(--hyphae-forked)); }
+.myco .m-sparse .hy { stroke: rgb(var(--hyphae-sparse)); }
+.myco .m-sparse .g0 { stroke-width: 1.8; }
+.myco .m-sparse .g1 { stroke-width: 1.2; }
+.myco .m-sparse .tip, .myco .m-sparse .mark.contact { fill: rgb(var(--hyphae-sparse)); }
+.myco .m-sparse .mark.attach { stroke: rgb(var(--hyphae-sparse)); }
 /* Interaction fronts: pigmented, much-branched hyphae; invasive cords; hyphae lysed after being overgrown */
 .myco .hy.pig { stroke: rgb(var(--pigment)); }
 .myco .hy.inv { stroke-width: 2.1; }
